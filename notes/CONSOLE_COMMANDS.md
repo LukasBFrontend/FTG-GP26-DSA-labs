@@ -5,3 +5,6 @@ dotnet build
 dotnet run --project ./src/DSA.LabXX.App
 dotnet test
 ```
+
+## Run specific test
+`dotnet test --filter Name~TestMethod1`
