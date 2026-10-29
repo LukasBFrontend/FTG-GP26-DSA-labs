@@ -28,7 +28,8 @@ namespace DSA.Lab03
         public void Set(int key, TValue value)
         {
             // TODO: search only the correct bucket, replace or append.
-            throw new NotImplementedException();
+            var bucket = _buckets[key];
+            bucket.Add(new Entry<TValue>(key, value));
         }
 
         public bool TryGetValue(int key, out TValue value)
