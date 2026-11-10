@@ -11,8 +11,7 @@ namespace DSA.Lab05
     /// </summary>
     public sealed class AdjacencyGraph
     {
-        private readonly Dictionary<string, List<string>> _neighborsByNode =
-            new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> _neighborsByNode = new();
 
         public AdjacencyGraph(IEnumerable<string> nodes, IEnumerable<DirectedEdge> edges)
         {
