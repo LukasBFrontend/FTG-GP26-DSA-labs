@@ -13,16 +13,14 @@ namespace DSA.Lab04B
     /// </summary>
     public sealed class BinaryHeapDispatchQueue<T>
     {
-        private readonly List<PriorityEntry<T>> _heap = new List<PriorityEntry<T>>();
+        private readonly List<PriorityEntry<T>> _heap = new();
 
         public int Count => _heap.Count;
 
         public void Enqueue(T item, int priority)
         {
-            // TODO:
-            // 1. Append the new entry at the end.
-            // 2. Restore the heap invariant upward.
-            throw new NotImplementedException();
+            _heap.Add( new (item, priority));
+            SiftUp(_heap.Count - 1);
         }
 
         public PriorityEntry<T> PeekNext()
@@ -37,33 +35,98 @@ namespace DSA.Lab04B
 
         public PriorityEntry<T> DequeueNext()
         {
-            // TODO:
-            // 1. Reject an empty queue.
-            // 2. Remember the root: that is the minimum.
-            // 3. Move the final heap entry to the root and remove the final slot.
-            // 4. If anything remains, restore the invariant downward.
-            // 5. Return the old root.
-            throw new NotImplementedException();
+            if (_heap.Count == 0)
+            {
+                throw new InvalidOperationException("The dispatch queue is empty.");
+            }
+
+            var oldRoot = _heap[0];
+            int lastIndex = _heap.Count - 1;
+
+            _heap[0] = _heap[lastIndex];
+            _heap.RemoveAt(lastIndex);
+
+            if (_heap.Count > 0)
+            {
+                SiftDown(0);
+            }
+
+            return oldRoot;
         }
 
         private void SiftUp(int index)
         {
-            // TODO: compare the entry with its parent and swap while needed.
-            throw new NotImplementedException();
+            int currentIndex = index;
+            int parentIndex = ParentIndex(currentIndex);
+
+            while (_heap[currentIndex].Priority < _heap[parentIndex].Priority)
+            {
+                Swap(currentIndex, parentIndex);
+
+                currentIndex = parentIndex;
+                parentIndex = ParentIndex(currentIndex);
+            }
         }
 
         private void SiftDown(int index)
         {
-            // TODO:
-            // Compare the current entry with its children.
-            // If a child should come first, swap with the smaller-priority child.
-            throw new NotImplementedException();
+            int currentIndex = index;
+            int smallestChildIndex = IndexOfLowestPriorityChild(currentIndex);
+
+            while (_heap[currentIndex].Priority > _heap[smallestChildIndex].Priority)
+            {
+                Swap(currentIndex, smallestChildIndex);
+
+                currentIndex = smallestChildIndex;
+                smallestChildIndex = IndexOfLowestPriorityChild(currentIndex);
+            }
+        }
+
+        private int IndexOfLowestPriorityChild(int index)
+        {
+            int result = index;
+            var children = GetChildrenIndices(index);
+
+            if (children.Count == 1)
+            {
+                result = children[0];
+            }
+            else if (children.Count == 2)
+            {
+                result = _heap[children[0]].Priority < _heap[children[1]].Priority
+                    ? children[0]
+                    : children[1]
+                ;
+            }
+
+            return result;
+        }
+
+        private IReadOnlyList<int> GetChildrenIndices(int index)
+        {
+            List<int> result = new();
+
+            int leftChildIndex = LeftChildIndex(index);
+            int rightChildIndex = RightChildIndex(index);
+
+            if (leftChildIndex < _heap.Count)
+            {
+                result.Add(leftChildIndex);
+            }
+
+            if (rightChildIndex < _heap.Count)
+            {
+                result.Add(rightChildIndex);
+            }
+
+            return result;
         }
 
         private static int ParentIndex(int index)
         {
             return (index - 1) / 2;
         }
+
 
         private static int LeftChildIndex(int index)
         {
