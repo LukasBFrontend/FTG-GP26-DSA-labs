@@ -19,7 +19,7 @@ namespace DSA.Lab04B
 
         public void Enqueue(T item, int priority)
         {
-            _heap.Add( new (item, priority));
+            _heap.Add(new (item, priority));
             SiftUp(_heap.Count - 1);
         }
 
