@@ -43,6 +43,43 @@ namespace DSA.Lab06
             //
             // Implement one small piece at a time and run the relevant tests.
 
+            while(expandedNodes < graph.NodeCount)
+            {
+                // 1. Repeatedly remove the smallest-priority frontier candidate.
+                var currentEntry = frontier.Dequeue();
+
+                // 2. Ignore stale entries when a cheaper cost is already known.
+                if (bestCost.TryGetValue(currentEntry.Value, out var currentBest))
+                {
+                    if (currentBest < currentEntry.Priority)
+                    {
+                        continue;
+                    }
+                }
+
+                // 3. Finalize/expand the current node.
+                foreach(WeightedEdge edge in graph.GetOutgoing(currentEntry.Value))
+                {
+                    string neighbor = edge.To;
+                    if (neighbor == cameFrom[currentEntry.Value]) // Only explore forwards
+                    {
+                        continue;
+                    }
+
+                    int candidate = bestCost[currentEntry.Value] + edge.Cost;
+
+                    if (candidate < bestCost[neighbor])
+                    {
+                        bestCost[neighbor] = candidate;
+                        cameFrom[neighbor] =
+                    }
+
+
+                    frontier.Enqueue(edge.To, candidate); // edge cost or total cost?
+                }
+            }
+
+
             return RouteResult.NotFound(expandedNodes);
         }
     }
